@@ -1,0 +1,166 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Project {
+  id                 String             @id @default(uuid())
+  projectNumber      String?
+  name               String
+  description        String?
+  location           String
+  clientName         String
+  clientAddress      String?
+  clientContact      String?
+  coordinatorName    String
+  coordinatorCert    String?
+  coordinatorContact String?
+  siteManager        String?
+  plannedStart       DateTime?
+  plannedEnd         DateTime?
+  status             String             @default("PLANUNG")
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  contractors        Contractor[]
+  advanceNotice      AdvanceNotice?
+  sigePlanEntries    SiGePlanEntry[]
+  inspections        SiteInspection[]
+  siteRules          SiteRule[]
+  subsequentWorks    SubsequentWork[]
+  defects            InspectionDefect[]
+}
+
+model Contractor {
+  id             String    @id @default(uuid())
+  projectId      String
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  companyName    String
+  trade          String
+  contactPerson  String?
+  phone          String?
+  email          String?
+  workerCount    Int       @default(1)
+  startDate      DateTime?
+  endDate        DateTime?
+  isSubcontractor Boolean  @default(false)
+  mainContractor String?
+  createdAt      DateTime  @default(now())
+}
+
+model AdvanceNotice {
+  id                     String    @id @default(uuid())
+  projectId              String    @unique
+  project                Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  authorityName          String    @default("Zuständiges Gewerbeaufsichtsamt / Amt für Arbeitsschutz")
+  authorityAddress       String?
+  noticeDate             DateTime  @default(now())
+  maxWorkersSimultaneous Int       @default(1)
+  estimatedTotalWorkDays Int       @default(0)
+  hasSpecialRisks        Boolean   @default(false)
+  noticeRequired         Boolean   @default(false)
+  submittedDate          DateTime?
+  status                 String    @default("ENTWURF")
+  notes                  String?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+}
+
+model SiGePlanEntry {
+  id                     String   @id @default(uuid())
+  projectId              String
+  project                Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  phase                  String
+  trade                  String
+  activity               String
+  hazards                String
+  isAnnex2SpecialHazard  Boolean  @default(false)
+  spatialTemporalOverlap String?
+  commonMeasures         String
+  responsibleCompany     String?
+  regulations            String?
+  priority               String   @default("NORMAL")
+  orderIndex             Int      @default(0)
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model HazardCatalogItem {
+  id                 String   @id @default(uuid())
+  tradeCategory      String
+  activity           String
+  hazard             String
+  protectiveMeasure  String
+  isAnnex2           Boolean  @default(false)
+  regulations        String?
+  createdAt          DateTime @default(now())
+}
+
+model SiteRule {
+  id                 String   @id @default(uuid())
+  projectId          String
+  project            Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  category           String   @default("ALLGEMEIN")
+  title              String
+  content            String
+  praxisProblem      String?
+  isContractRelevant Boolean  @default(false)
+  isSiGePlanRelevant Boolean  @default(false)
+  actionStatus       String   @default("GEREGELT")
+  orderIndex         Int      @default(0)
+  createdAt          DateTime @default(now())
+}
+
+model SubsequentWork {
+  id                    String   @id @default(uuid())
+  projectId             String
+  project               Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  component             String
+  workType              String
+  hazards               String
+  safetyMeasures        String
+  documentationLocation String?
+  notes                 String?
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
+model SiteInspection {
+  id                   String             @id @default(uuid())
+  projectId            String
+  project              Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  date                 DateTime           @default(now())
+  inspector            String
+  participants         String?
+  weather              String?
+  constructionProgress String?
+  overallImpression    String             @default("GUT")
+  summary              String?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  defects              InspectionDefect[]
+}
+
+model InspectionDefect {
+  id             String         @id @default(uuid())
+  inspectionId   String
+  inspection     SiteInspection @relation(fields: [inspectionId], references: [id], onDelete: Cascade)
+  projectId      String
+  project        Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  description    String
+  location       String
+  severity       String         @default("MITTEL")
+  tradeAssigned  String?
+  deadline       DateTime?
+  status         String         @default("OFFEN")
+  imageUrl       String?
+  resolvedAt     DateTime?
+  resolutionNote String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
