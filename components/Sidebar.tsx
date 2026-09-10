@@ -15,6 +15,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Settings,
   X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -132,6 +133,13 @@ export default function Sidebar({
       badge: null,
     },
   ];
+
+  const adminNavItem = {
+    label: "Admin & System",
+    href: "/admin",
+    icon: Settings,
+    badge: "Admin",
+  };
 
   return (
     <aside
@@ -492,6 +500,50 @@ export default function Sidebar({
             </Link>
           );
         })}
+
+        {/* Admin separator */}
+        <div style={{ margin: "6px 8px", borderTop: "1px solid var(--border)" }} />
+
+        {/* Admin & System nav item */}
+        {(() => {
+          const Icon = adminNavItem.icon;
+          const isActive = pathname === adminNavItem.href || pathname?.startsWith(adminNavItem.href + "/");
+          return (
+            <Link
+              href={adminNavItem.href}
+              onClick={() => onClose?.()}
+              className={`nav-item ${isActive ? "active" : ""}`}
+              id="nav-admin-system"
+              title="Admin & System"
+              style={{
+                color: isActive ? "var(--safety-amber)" : "var(--text-muted)",
+                borderTop: "none",
+              }}
+            >
+              <Icon size={16} style={{ flexShrink: 0 }} />
+              {!isCollapsed && (
+                <>
+                  <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {adminNavItem.label}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: "9.5px",
+                      padding: "1px 5px",
+                      borderRadius: "4px",
+                      background: isActive ? "rgba(245, 158, 11, 0.25)" : "rgba(245,158,11,0.1)",
+                      color: isActive ? "var(--safety-amber)" : "rgba(245,158,11,0.7)",
+                      fontWeight: 600,
+                      lineHeight: "1.3",
+                    }}
+                  >
+                    {adminNavItem.badge}
+                  </span>
+                </>
+              )}
+            </Link>
+          );
+        })()}
       </nav>
 
       {/* Bottom Info & RAB 30 Badge + Collapse Footer */}

@@ -1215,4 +1215,17 @@ body, p, span, div, h1, h2, h3, h4, td, th {
   }
 }
 
+/* ─── Utility Animations ─── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Missing CSS vars referenced in Admin UI ─── */
+:root {
+  --bg-primary: var(--bg-canvas);
+  --bg-secondary: var(--bg-card);
+  --bg-hover: rgba(255, 255, 255, 0.03);
+  --success-green: #22c55e;
+}
 
