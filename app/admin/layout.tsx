@@ -54,8 +54,40 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           SiGeKo-Planer
         </span>
         <span style={{ color: "var(--border)", margin: "0 4px" }}>/</span>
-        <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>Admin & System</span>
+        <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>Admin &amp; System</span>
+
+        {/* Spacer */}
+        <div style={{ flex: 1 }} />
+
+        {/* Back to App */}
+        <a
+          href="/"
+          className="admin-back-link"
+        >
+          ← Zurück zur App
+        </a>
       </header>
+
+      <style>{`
+        .admin-back-link {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--text-muted);
+          text-decoration: none;
+          padding: 5px 12px;
+          border-radius: 7px;
+          border: 1px solid var(--border);
+          background: transparent;
+          transition: color 0.15s, border-color 0.15s;
+        }
+        .admin-back-link:hover {
+          color: var(--text-primary);
+          border-color: rgba(255,255,255,0.2);
+        }
+      `}</style>
 
       <div style={{ padding: "0 0 48px" }}>{children}</div>
     </div>
