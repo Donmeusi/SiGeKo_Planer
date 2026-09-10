@@ -16,6 +16,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Settings,
+  LogOut,
   X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -45,6 +46,14 @@ export default function Sidebar({
   const [projectList, setProjectList] = useState<ProjectSummary[]>(allProjects);
   const [showProjectSelect, setShowProjectSelect] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/admin/auth/logout", { method: "POST" });
+    } catch {}
+    router.push("/login");
+    router.refresh();
+  };
 
   // Restore collapsed preference from localStorage
   useEffect(() => {
@@ -589,6 +598,34 @@ export default function Sidebar({
               </div>
             </div>
           </div>
+
+          {/* Logout Button */}
+          <button
+            type="button"
+            id="sidebar-logout-btn"
+            onClick={handleLogout}
+            style={{
+              width: "100%",
+              padding: "5px 0",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+              background: "transparent",
+              border: "none",
+              borderTop: "1px solid rgba(255,255,255,0.05)",
+              color: "var(--text-muted)",
+              cursor: "pointer",
+              fontSize: "11px",
+              marginBottom: "2px",
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#ef4444")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
+          >
+            <LogOut size={12} />
+            <span>Abmelden</span>
+          </button>
 
           <button
             type="button"

@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import {
   Shield,
   Users,
-  Settings,
   LogOut,
   Plus,
   Edit2,
@@ -21,7 +21,6 @@ import {
   UserX,
   HardHat,
 } from "lucide-react";
-import AdminLoginModal from "@/components/AdminLoginModal";
 
 /* ─── Types ─────────────────────────────────────────────────── */
 interface AdminUser {
@@ -93,6 +92,8 @@ export default function AdminPage() {
   const [sessionLoading, setSessionLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"users" | "system">("users");
 
+  const router = useRouter();
+
   // Check session on mount
   useEffect(() => {
     fetch("/api/admin/auth/session")
@@ -104,13 +105,10 @@ export default function AdminPage() {
       .catch(() => setSessionLoading(false));
   }, []);
 
-  const handleLoginSuccess = (user: { username: string; name: string | null; role: string }) => {
-    setSession(user as CurrentSession);
-  };
-
   const handleLogout = async () => {
     await fetch("/api/admin/auth/logout", { method: "POST" });
-    setSession(null);
+    router.push("/login");
+    router.refresh();
   };
 
   if (sessionLoading) {
@@ -133,7 +131,11 @@ export default function AdminPage() {
   }
 
   if (!session) {
-    return <AdminLoginModal onSuccess={handleLoginSuccess} />;
+    return (
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "60vh", color: "var(--text-muted)" }}>
+        <RefreshCw size={20} style={{ animation: "spin 1s linear infinite" }} />
+      </div>
+    );
   }
 
   return (
