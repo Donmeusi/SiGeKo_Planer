@@ -22,6 +22,11 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/) 
 - **Multi-Theme-System (5 Farbwelten & Hell/Dunkel):**
   - Schneller Farbschema-Umschalter oben rechts in der Kopfzeile (`TopBar.tsx`) mit Live-Vorschau und `localStorage`-Persistierung.
   - 5 ergonomische Themes: *Architektur Dunkel*, *Architektur Hell*, *Baustellen Slate* (Smaragdgrün & Zink), *Nordic Blue* (Ozeanblau & Schiefer) und *Warmes Holz / Sepia*.
+- **Vollständige Docker- & Container-Unterstützung:**
+  - Multi-Stage Alpine `Dockerfile` mit Next.js 15 Standalone-Optimierung (< 180 MB Image-Größe) und unprivilegiertem Non-Root-User `nextjs`.
+  - Vorkonfigurierte `docker-compose.yml` mit persistentem Volume für die SQLite-Datenbank (`sigeko_data`) und automatischem Healthcheck.
+  - Automatisches Initialisierungs-Skript (`docker-entrypoint.sh`) für schema push und optionales Laden von Musterdaten (`SEED_DATABASE=true`).
+  - Ausführliche Docker-Dokumentation und Backup-Anleitung in der `README.md`.
 
 ### Geändert & Optimiert
 - **Workflow-Optimierung der Hauptnavigation (`Sidebar.tsx`):**

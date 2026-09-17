@@ -87,7 +87,95 @@ Der **SiGeKo-Planer** ist eine spezialisierte Anwendung für Sicherheits- und Ge
 
 ---
 
-## 💻 Installation & Lokaler Betrieb
+## 🐳 Docker & Container-Betrieb
+
+Der **SiGeKo-Planer** ist vollständig containerisiert und sofort einsatzbereit für Docker und Docker Compose. Das Image basiert auf einem Multi-Stage Alpine-Build mit Next.js Standalone-Optimierung (Image-Größe < 180 MB) und führt die Anwendung sicher unter einem unprivilegierten Non-Root-Benutzer (`nextjs`) aus.
+
+### 1. Schnellstart mit Docker Compose (Empfohlen)
+
+Das Repository enthält eine vorkonfigurierte [`docker-compose.yml`](file:///c:/Users/chris/Desktop/Codes/SiGeKo_Planer/docker-compose.yml) mit persistentem Datenbank-Volume und automatischem Healthcheck:
+
+```bash
+# Repository klonen
+git clone https://github.com/Donmeusi/SiGeKo_Planer.git
+cd SiGeKo_Planer
+
+# Container im Hintergrund starten
+docker compose up -d
+```
+
+Die Anwendung ist anschließend sofort im Browser erreichbar unter:  
+👉 **[http://localhost:3000](http://localhost:3000)**
+
+#### Nützliche Docker Compose Befehle:
+```bash
+# Live-Logs des Containers ansehen
+docker compose logs -f
+
+# Container stoppen
+docker compose stop
+
+# Container beenden (Datenbank bleibt im Volume erhalten)
+docker compose down
+
+# Container nach Updates neu bauen und starten
+docker compose up -d --build
+```
+
+---
+
+### 2. Manueller Betrieb mit Docker CLI
+
+Alternativ kann das Image direkt mit der Docker CLI gebaut und ausgeführt werden:
+
+```bash
+# 1. Docker-Image bauen
+docker build -t sigeko-planer .
+
+# 2. Persistentes Volume für die SQLite-Datenbank erstellen
+docker volume create sigeko_planer_data
+
+# 3. Container starten
+docker run -d \
+  --name sigeko-planer \
+  -p 3000:3000 \
+  -v sigeko_planer_data:/app/prisma \
+  --restart unless-stopped \
+  sigeko-planer:latest
+```
+
+---
+
+### 3. Konfigurations- & Umgebungsvariablen
+
+Die folgenden Umgebungsvariablen können über die `docker-compose.yml` oder beim `docker run`-Befehl übergeben werden:
+
+| Variable | Standardwert | Beschreibung |
+|---|---|---|
+| `PORT` | `3000` | Port, auf dem der Next.js Server lauscht. |
+| `DATABASE_URL` | `file:/app/prisma/dev.db` | Pfad zur SQLite-Datenbankdatei im Container. |
+| `SEED_DATABASE` | `false` | Auf `true` setzen, um beim ersten Start das Muster-Bauvorhaben mit SiGe-Plan & Begehungen zu laden. |
+| `NODE_ENV` | `production` | Produktionsmodus für maximale Performance. |
+
+> [!TIP]
+> **Musterdaten beim ersten Start:** Setzen Sie in der `docker-compose.yml` die Variable `SEED_DATABASE=true`, wenn Sie die Anwendung direkt mit einem vollumfänglichen Muster-Projekt testen möchten.
+
+---
+
+### 4. Daten-Persistenz & Datensicherung (Backup)
+
+Alle Projekte, Begehungen, SiGe-Pläne, Gewerke und Benutzerdaten werden in der SQLite-Datenbank `dev.db` im Pfad `/app/prisma` gespeichert.
+
+- **Persistenz:** Durch das gemountete Docker-Volume (`sigeko_planer_data`) bleiben alle Daten bei Container-Updates, Reboots oder Neuerstellungen vollständig erhalten.
+- **Backup der Datenbank:**
+  ```bash
+  # Datenbank direkt aus dem laufenden Container auf den Host kopieren
+  docker cp sigeko-planer:/app/prisma/dev.db ./backup_dev_$(date +%Y%m%d).db
+  ```
+
+---
+
+## 💻 Lokale Installation & Betrieb (ohne Docker)
 
 ### Voraussetzungen
 - [Node.js](https://nodejs.org/) (Version 18 oder neuer)

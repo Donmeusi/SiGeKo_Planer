@@ -1,0 +1,29 @@
+services:
+  sigeko-planer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sigeko-planer:latest
+    container_name: sigeko-planer
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=file:/app/prisma/dev.db
+      # Auf "true" setzen, falls beim allerersten Start Muster-Projektdaten geladen werden sollen:
+      - SEED_DATABASE=false
+    volumes:
+      # Persistenter Speicher für die SQLite-Datenbankdatei (dev.db)
+      - sigeko_data:/app/prisma
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  sigeko_data:
+    name: sigeko_planer_data
