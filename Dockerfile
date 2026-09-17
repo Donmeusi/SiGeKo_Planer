@@ -19,9 +19,11 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
+ENV DATABASE_URL="file:/app/prisma/dev.db"
 
-# Prisma Client für Linux x64/musl generieren
+# Prisma Client generieren & SQLite Schema für Build-Phase vorbereiten
 RUN npx prisma generate
+RUN npx prisma db push --skip-generate
 RUN mkdir -p public
 RUN npm run build
 

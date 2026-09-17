@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { HardHat, Building, ArrowRight, ShieldCheck, FileText, Users } from "lucide-react";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const projects = await db.project.findMany({
     orderBy: { updatedAt: "desc" },
