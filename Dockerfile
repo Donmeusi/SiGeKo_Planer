@@ -48,15 +48,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
+
+# Alle Abhängigkeiten (Prisma CLI, tsx, engines, .bin) aus deps übernehmen
+COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=deps /app/node_modules/.bin ./node_modules/.bin
-COPY --from=deps /app/node_modules/prisma ./node_modules/prisma
-COPY --from=deps /app/node_modules/@prisma/engines ./node_modules/@prisma/engines
-COPY --from=deps /app/node_modules/tsx ./node_modules/tsx
-COPY --from=deps /app/node_modules/esbuild ./node_modules/esbuild
-COPY --from=deps /app/node_modules/@esbuild ./node_modules/@esbuild
-COPY --from=deps /app/node_modules/get-tsconfig ./node_modules/get-tsconfig
 
 # Entrypoint-Skript für automatische DB-Initialisierung
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
