@@ -543,7 +543,7 @@ export default function SiGePlanPage() {
                               <div
                                 style={{
                                   fontSize: "13px",
-                                  color: entry.isAnnex2SpecialHazard ? "#fecaca" : "var(--text-primary)",
+                                  color: entry.isAnnex2SpecialHazard ? "var(--hazard-red)" : "var(--text-primary)",
                                   lineHeight: "1.45",
                                 }}
                               >
@@ -558,7 +558,7 @@ export default function SiGePlanPage() {
 
                             {/* Schutzmaßnahmen */}
                             <td>
-                              <div style={{ fontSize: "13px", lineHeight: "1.45", color: "#f8fafc" }}>
+                              <div style={{ fontSize: "13px", lineHeight: "1.45", color: "var(--text-primary)" }}>
                                 {entry.commonMeasures}
                               </div>
                               {entry.regulations && (

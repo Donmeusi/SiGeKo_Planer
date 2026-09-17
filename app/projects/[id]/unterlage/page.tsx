@@ -194,7 +194,7 @@ export default function SubsequentWorkPage() {
                     <div style={{ fontSize: "13px", color: "var(--text-secondary)" }}>{item.workType}</div>
                   </td>
                   <td>
-                    <div style={{ fontSize: "13px", color: "#fca5a5" }}>{item.hazards}</div>
+                    <div style={{ fontSize: "13px", color: "var(--hazard-red)" }}>{item.hazards}</div>
                   </td>
                   <td>
                     <div style={{ fontSize: "13px", color: "var(--text-primary)", lineHeight: "1.45" }}>

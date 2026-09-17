@@ -48,6 +48,17 @@
   --shadow-amber: 0 0 20px rgba(245, 158, 11, 0.2);
   --shadow-hazard: 0 0 20px rgba(239, 68, 68, 0.2);
 
+  /* Contrast-optimierte Badge- & Button-Tokens */
+  --badge-amber-text: #fbbf24;
+  --badge-amber-border: rgba(245, 158, 11, 0.35);
+  --badge-red-text: #f87171;
+  --badge-red-border: rgba(239, 68, 68, 0.4);
+  --badge-green-text: #34d399;
+  --badge-green-border: rgba(16, 185, 129, 0.4);
+  --badge-blue-text: #38bdf8;
+  --badge-blue-border: rgba(56, 189, 248, 0.4);
+  --btn-primary-text: #0b0f19;
+
   /* Dimensions & Radius */
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -75,7 +86,7 @@
   --border-focus: #ea580c;
 
   --text-primary: #0f172a;
-  --text-secondary: #475569;
+  --text-secondary: #334155;
   --text-muted: #64748b;
   --text-inverse: #ffffff;
 
@@ -101,6 +112,16 @@
   --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.12);
   --shadow-amber: 0 0 16px rgba(217, 119, 6, 0.18);
   --shadow-hazard: 0 0 16px rgba(220, 38, 38, 0.18);
+
+  --badge-amber-text: #92400e;
+  --badge-amber-border: rgba(180, 83, 9, 0.35);
+  --badge-red-text: #b91c1c;
+  --badge-red-border: rgba(185, 28, 28, 0.35);
+  --badge-green-text: #15803d;
+  --badge-green-border: rgba(21, 128, 61, 0.35);
+  --badge-blue-text: #0369a1;
+  --badge-blue-border: rgba(3, 105, 161, 0.35);
+  --btn-primary-text: #ffffff;
 
   color-scheme: light;
 }
@@ -147,25 +168,35 @@
   --shadow-amber: 0 0 20px rgba(245, 158, 11, 0.2);
   --shadow-hazard: 0 0 20px rgba(244, 63, 94, 0.2);
 
+  --badge-amber-text: #fbbf24;
+  --badge-amber-border: rgba(245, 158, 11, 0.35);
+  --badge-red-text: #f87171;
+  --badge-red-border: rgba(244, 63, 94, 0.4);
+  --badge-green-text: #10b981;
+  --badge-green-border: rgba(16, 185, 129, 0.4);
+  --badge-blue-text: #38bdf8;
+  --badge-blue-border: rgba(6, 182, 212, 0.4);
+  --btn-primary-text: #09090b;
+
   color-scheme: dark;
 }
 
 /* ─── Warm Sandstein (Augenschonend / Sepia) ─────────────────────── */
 [data-theme="sand"] {
-  --bg-canvas: #f5f2eb;
-  --bg-surface: #fdfbf7;
-  --bg-card: #fdfbf7;
-  --bg-card-hover: #f5f0e6;
+  --bg-canvas: #f6f3ed;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #faf7f2;
   --bg-input: #ffffff;
-  --bg-muted: #e8e2d5;
-  --bg-glass: rgba(253, 251, 247, 0.94);
+  --bg-muted: #ece5d8;
+  --bg-glass: rgba(255, 255, 255, 0.95);
 
-  --border: #d6cebf;
-  --border-strong: #b8ac96;
+  --border: #dcd3c4;
+  --border-strong: #b8aba0;
   --border-focus: #b45309;
 
-  --text-primary: #292524;
-  --text-secondary: #57534e;
+  --text-primary: #1c1917;
+  --text-secondary: #44403c;
   --text-muted: #78716c;
   --text-inverse: #fafaf9;
 
@@ -186,11 +217,22 @@
   --tech-blue: #0369a1;
   --tech-blue-dim: rgba(3, 105, 161, 0.12);
 
-  --shadow-sm: 0 1px 2px rgba(87, 83, 78, 0.06);
-  --shadow-md: 0 4px 14px rgba(87, 83, 78, 0.1);
-  --shadow-lg: 0 10px 25px rgba(87, 83, 78, 0.14);
+  --shadow-sm: 0 1px 2px rgba(41, 37, 36, 0.05);
+  --shadow-md: 0 4px 14px rgba(41, 37, 36, 0.08);
+  --shadow-lg: 0 10px 25px rgba(41, 37, 36, 0.12);
   --shadow-amber: 0 0 16px rgba(180, 83, 9, 0.18);
   --shadow-hazard: 0 0 16px rgba(185, 28, 28, 0.18);
+
+  --badge-amber-text: #854d0e;
+  --badge-amber-border: rgba(133, 77, 14, 0.4);
+  --badge-red-text: #991b1b;
+  --badge-red-border: rgba(153, 27, 27, 0.4);
+  --badge-green-text: #166534;
+  --badge-green-border: rgba(22, 101, 52, 0.4);
+  --badge-blue-text: #075985;
+  --badge-blue-border: rgba(7, 89, 133, 0.4);
+
+  --btn-primary-text: #ffffff;
 
   color-scheme: light;
 }
@@ -236,6 +278,16 @@
   --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.7);
   --shadow-amber: 0 0 20px rgba(250, 204, 21, 0.25);
   --shadow-hazard: 0 0 20px rgba(248, 113, 113, 0.25);
+
+  --badge-amber-text: #facc15;
+  --badge-amber-border: rgba(250, 204, 21, 0.35);
+  --badge-red-text: #f87171;
+  --badge-red-border: rgba(248, 113, 113, 0.4);
+  --badge-green-text: #34d399;
+  --badge-green-border: rgba(52, 211, 153, 0.4);
+  --badge-blue-text: #38bdf8;
+  --badge-blue-border: rgba(56, 189, 248, 0.4);
+  --btn-primary-text: #020617;
 
   color-scheme: dark;
 }
@@ -416,13 +468,14 @@ button, input, select, textarea {
 
 .btn-primary {
   background: var(--safety-amber);
-  color: #0b0f19;
+  color: var(--btn-primary-text, #0b0f19);
   border-color: var(--safety-amber);
   font-weight: 600;
 }
 
 .btn-primary:hover {
   background: #fbbf24;
+  color: #0b0f19;
   box-shadow: 0 0 16px rgba(245, 158, 11, 0.4);
 }
 
@@ -439,8 +492,8 @@ button, input, select, textarea {
 
 .btn-danger {
   background: var(--hazard-red-dim);
-  color: #fca5a5;
-  border-color: rgba(239, 68, 68, 0.4);
+  color: var(--badge-red-text, #f87171);
+  border-color: var(--badge-red-border, rgba(239, 68, 68, 0.4));
 }
 
 .btn-danger:hover {
@@ -487,38 +540,38 @@ button, input, select, textarea {
 
 .badge-amber {
   background: var(--safety-amber-dim);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--badge-amber-text, #fbbf24);
+  border: 1px solid var(--badge-amber-border, rgba(245, 158, 11, 0.3));
 }
 
 .badge-red {
   background: var(--hazard-red-dim);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: var(--badge-red-text, #f87171);
+  border: 1px solid var(--badge-red-border, rgba(239, 68, 68, 0.4));
 }
 
 .badge-green {
   background: var(--success-emerald-dim);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: var(--badge-green-text, #34d399);
+  border: 1px solid var(--badge-green-border, rgba(16, 185, 129, 0.3));
 }
 
 .badge-blue {
   background: var(--tech-blue-dim);
-  color: #38bdf8;
-  border: 1px solid rgba(2, 132, 199, 0.3);
+  color: var(--badge-blue-text, #38bdf8);
+  border: 1px solid var(--badge-blue-border, rgba(2, 132, 199, 0.3));
 }
 
 .badge-muted {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-muted);
   color: var(--text-secondary);
   border: 1px solid var(--border);
 }
 
 .badge-annex2 {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.25), rgba(234, 88, 12, 0.25));
-  color: #ff8b8b;
-  border: 1px solid #ef4444;
+  background: var(--hazard-red-dim);
+  color: var(--badge-red-text, #f87171);
+  border: 1.5px solid var(--hazard-red);
   font-weight: 700;
   animation: pulse-border 2.5s infinite;
 }
@@ -535,9 +588,9 @@ button, input, select, textarea {
   letter-spacing: 0.01em;
   text-transform: none;
   white-space: nowrap;
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: var(--hazard-red-dim);
+  color: var(--badge-red-text, #f87171);
+  border: 1px solid var(--badge-red-border, rgba(239, 68, 68, 0.35));
 }
 
 .badge-status-progress {
@@ -551,9 +604,9 @@ button, input, select, textarea {
   letter-spacing: 0.01em;
   text-transform: none;
   white-space: nowrap;
-  background: rgba(2, 132, 199, 0.14);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.4);
+  background: var(--tech-blue-dim);
+  color: var(--badge-blue-text, #38bdf8);
+  border: 1px solid var(--badge-blue-border, rgba(56, 189, 248, 0.4));
   box-shadow: 0 0 10px rgba(56, 189, 248, 0.12);
 }
 
@@ -568,9 +621,9 @@ button, input, select, textarea {
   letter-spacing: 0.01em;
   text-transform: none;
   white-space: nowrap;
-  background: rgba(16, 185, 129, 0.12);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: var(--success-emerald-dim);
+  color: var(--badge-green-text, #34d399);
+  border: 1px solid var(--badge-green-border, rgba(16, 185, 129, 0.35));
 }
 
 /* ─── Spezielle Schweregrad-Badges ────────────────────────────────── */
@@ -585,10 +638,10 @@ button, input, select, textarea {
   letter-spacing: 0.02em;
   text-transform: none;
   white-space: nowrap;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.22) 0%, rgba(185, 28, 28, 0.32) 100%);
-  color: #fee2e2;
-  border: 1px solid #ef4444;
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.35);
+  background: var(--hazard-red-dim);
+  color: var(--badge-red-text, #fee2e2);
+  border: 1px solid var(--hazard-red);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
   animation: pulse-hazard-badge 2.4s infinite ease-in-out;
 }
 
@@ -603,9 +656,9 @@ button, input, select, textarea {
   letter-spacing: 0.01em;
   text-transform: none;
   white-space: nowrap;
-  background: rgba(234, 88, 12, 0.14);
-  color: #fb923c;
-  border: 1px solid rgba(234, 88, 12, 0.4);
+  background: var(--safety-orange-dim);
+  color: var(--safety-orange);
+  border: 1px solid var(--safety-orange);
 }
 
 .badge-severity-medium {
@@ -619,9 +672,9 @@ button, input, select, textarea {
   letter-spacing: 0.01em;
   text-transform: none;
   white-space: nowrap;
-  background: rgba(245, 158, 11, 0.12);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.35);
+  background: var(--safety-amber-dim);
+  color: var(--badge-amber-text, #fbbf24);
+  border: 1px solid var(--badge-amber-border, rgba(245, 158, 11, 0.35));
 }
 
 .badge-severity-low {
@@ -635,9 +688,9 @@ button, input, select, textarea {
   letter-spacing: 0.01em;
   text-transform: none;
   white-space: nowrap;
-  background: rgba(148, 163, 184, 0.1);
-  color: #94a3b8;
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
 }
 
 /* Status & Schweregrad Indikatoren (Micro-Dots) */

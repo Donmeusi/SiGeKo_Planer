@@ -916,7 +916,8 @@ export default function SiteRulesPage() {
                 fontSize: "10.5px",
                 padding: "1px 5px",
                 borderRadius: "10px",
-                background: selectedChapter === "ALL" ? "rgba(245, 158, 11, 0.2)" : "rgba(255, 255, 255, 0.06)",
+                background: selectedChapter === "ALL" ? "var(--safety-amber-dim)" : "var(--bg-muted)",
+                color: selectedChapter === "ALL" ? "var(--safety-amber)" : "var(--text-secondary)",
               }}
             >
               {rules.length}
@@ -954,8 +955,8 @@ export default function SiteRulesPage() {
                     fontSize: "10.5px",
                     padding: "1px 5px",
                     borderRadius: "10px",
-                    background: isSelected ? `${chap.color}22` : "rgba(255, 255, 255, 0.06)",
-                    color: isSelected ? chap.color : "var(--text-muted)",
+                    background: isSelected ? `${chap.color}22` : "var(--bg-muted)",
+                    color: isSelected ? chap.color : "var(--text-secondary)",
                   }}
                 >
                   {count}
@@ -1304,7 +1305,7 @@ export default function SiteRulesPage() {
                               fontFamily: "var(--font-mono)",
                               padding: "2px 7px",
                               borderRadius: "4px",
-                              background: "rgba(255, 255, 255, 0.05)",
+                              background: "var(--bg-muted)",
                               color: "var(--text-secondary)",
                               border: "1px solid var(--border)",
                             }}

@@ -473,7 +473,7 @@ export default async function ProjectDashboardPage({
                     }}
                   >
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px", marginBottom: "4px" }}>
-                      <strong style={{ color: "#fca5a5" }}>{item.activity}</strong>
+                      <strong style={{ color: "var(--hazard-red)" }}>{item.activity}</strong>
                       <span className="cockpit-tag" style={{ fontSize: "10px", flexShrink: 0 }}>
                         {item.trade}
                       </span>
@@ -569,7 +569,7 @@ export default async function ProjectDashboardPage({
             <div className="meta-table">
               <span className="meta-label">SiGe-Koordinator:</span>
               <div className="meta-value">
-                <strong style={{ color: "#f8fafc" }}>{project.coordinatorName}</strong>
+                <strong style={{ color: "var(--text-primary)" }}>{project.coordinatorName}</strong>
                 <div style={{ fontSize: "11px", color: "var(--safety-amber)", marginTop: "1px" }}>
                   {project.coordinatorCert || "Qualifikation gem. RAB 30 Anlagen B & C"}
                 </div>

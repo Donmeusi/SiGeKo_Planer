@@ -225,7 +225,7 @@ export default function Sidebar({
                   fontWeight: 800,
                   fontSize: "13px",
                   letterSpacing: "-0.02em",
-                  color: "#f8fafc",
+                  color: "var(--text-primary)",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
@@ -350,7 +350,7 @@ export default function Sidebar({
                   style={{
                     fontWeight: 600,
                     fontSize: "12px",
-                    color: "#f8fafc",
+                    color: "var(--text-primary)",
                     whiteSpace: "nowrap",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -604,7 +604,7 @@ export default function Sidebar({
                 style={{
                   fontSize: "11px",
                   fontWeight: 600,
-                  color: "#f8fafc",
+                  color: "var(--text-primary)",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",

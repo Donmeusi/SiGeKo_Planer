@@ -486,7 +486,7 @@ export function SiGeGanttView({
                     fontSize: "11px",
                     fontWeight: 700,
                     color: "var(--text-secondary)",
-                    backgroundColor: "rgba(255, 255, 255, 0.02)",
+                    backgroundColor: "var(--bg-muted)",
                     borderRight: "1px solid var(--border-strong)",
                     lineHeight: "22px",
                   }}
@@ -610,7 +610,7 @@ export function SiGeGanttView({
                     top: 0,
                     bottom: 0,
                     width: "1px",
-                    backgroundColor: "rgba(255, 255, 255, 0.03)",
+                    backgroundColor: "var(--border)",
                   }}
                 />
               ))}

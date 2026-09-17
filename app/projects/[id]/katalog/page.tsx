@@ -186,7 +186,7 @@ export default function CatalogPage() {
                 {item.activity}
               </h3>
 
-              <div style={{ fontSize: "12.5px", color: "#fca5a5", marginBottom: "8px", lineHeight: "1.45" }}>
+              <div style={{ fontSize: "12.5px", color: "var(--hazard-red)", marginBottom: "8px", lineHeight: "1.45" }}>
                 <strong>Gefährdung:</strong> {item.hazard}
               </div>
 
