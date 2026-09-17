@@ -122,6 +122,17 @@ docker compose down
 docker compose up -d --build
 ```
 
+#### 🔄 Updates einspielen (Docker):
+Wenn neue Funktionen oder Fehlerkorrekturen im Repository bereitstehen:
+```bash
+# 1. Neueste Änderungen aus dem Branch abrufen (z. B. beta oder main)
+git pull origin beta
+
+# 2. Container neu kompilieren und unterbrechungsarm neu starten
+docker compose up -d --build
+```
+> **100% Datensicherheit:** Alle Projektdaten und die SQLite-Datenbank liegen im persistenten Docker-Volume `sigeko_planer_data` und bleiben bei jedem Update/Rebuild vollständig erhalten.
+
 ---
 
 ### 2. Manueller Betrieb mit Docker CLI

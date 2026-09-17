@@ -36,6 +36,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 ENV DATABASE_URL="file:/app/prisma/dev.db"
+ENV DOCKER_CONTAINER="true"
 
 # Sicherheitskonformer Non-Root User
 RUN addgroup --system --gid 1001 nodejs && \

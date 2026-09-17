@@ -13,6 +13,7 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - DATABASE_URL=file:/app/prisma/dev.db
+      - DOCKER_CONTAINER=true
       # Auf "true" setzen, falls beim allerersten Start Muster-Projektdaten geladen werden sollen:
       - SEED_DATABASE=false
     volumes:

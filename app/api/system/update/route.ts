@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { exec } from "child_process";
 import { promisify } from "util";
+import fs from "fs";
 import { getCurrentSession } from "@/lib/auth";
 
 const execAsync = promisify(exec);
@@ -10,49 +11,94 @@ function getErrorMessage(err: unknown): string {
   return String(err);
 }
 
+function checkIsDocker(): boolean {
+  if (process.env.DOCKER_CONTAINER === "true") return true;
+  if (fs.existsSync("/.dockerenv")) return true;
+  try {
+    if (fs.existsSync("/proc/1/cgroup") && fs.readFileSync("/proc/1/cgroup", "utf8").includes("docker")) {
+      return true;
+    }
+  } catch {}
+  return false;
+}
+
+async function checkGitAvailable(): Promise<boolean> {
+  try {
+    await execAsync("git --version");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // GET /api/system/update
 export async function GET() {
   try {
     const cwd = process.cwd();
+    const isDocker = checkIsDocker();
+    const gitAvailable = await checkGitAvailable();
 
     let currentBranch = "beta";
-    try {
-      const { stdout } = await execAsync("git branch --show-current", { cwd });
-      currentBranch = stdout.trim() || "beta";
-    } catch (e) {
-      console.warn("Could not get current git branch", e);
-    }
-
     let localCommit = "v0.3.0";
-    try {
-      const { stdout } = await execAsync("git rev-parse --short HEAD", { cwd });
-      localCommit = stdout.trim() || "v0.3.0";
-    } catch (e) {
-      console.warn("Could not get local commit", e);
-    }
-
     let remoteUrl = "https://github.com/Donmeusi/SiGeKo_Planer.git";
-    try {
-      const { stdout } = await execAsync("git remote get-url origin", { cwd });
-      remoteUrl = stdout.trim() || remoteUrl;
-    } catch (e) {
-      console.warn("Could not get remote url", e);
-    }
-
-    let remoteCommit = localCommit;
+    let remoteCommit = "—";
     let updatesAvailable = false;
-    try {
-      const { stdout } = await execAsync(`git ls-remote origin ${currentBranch}`, { cwd });
-      const parts = stdout.trim().split(/\s+/);
-      if (parts[0]) {
-        remoteCommit = parts[0].slice(0, 7);
-        updatesAvailable = remoteCommit !== localCommit;
+
+    if (gitAvailable) {
+      try {
+        const { stdout } = await execAsync("git branch --show-current", { cwd });
+        currentBranch = stdout.trim() || "beta";
+      } catch (e) {
+        console.warn("Could not get current git branch", e);
       }
-    } catch (e) {
-      console.warn("Could not fetch remote commit info", e);
+
+      try {
+        const { stdout } = await execAsync("git rev-parse --short HEAD", { cwd });
+        localCommit = stdout.trim() || "v0.3.0";
+      } catch (e) {
+        console.warn("Could not get local commit", e);
+      }
+
+      try {
+        const { stdout } = await execAsync("git remote get-url origin", { cwd });
+        remoteUrl = stdout.trim() || remoteUrl;
+      } catch (e) {
+        console.warn("Could not get remote url", e);
+      }
+
+      try {
+        const { stdout } = await execAsync(`git ls-remote origin ${currentBranch}`, { cwd });
+        const parts = stdout.trim().split(/\s+/);
+        if (parts[0]) {
+          remoteCommit = parts[0].slice(0, 7);
+          updatesAvailable = remoteCommit !== localCommit;
+        }
+      } catch (e) {
+        console.warn("Could not fetch remote commit info via git", e);
+      }
+    } else {
+      // Running in Docker or git binary not available:
+      // Query GitHub REST API directly for update status
+      try {
+        const res = await fetch(`https://api.github.com/repos/Donmeusi/SiGeKo_Planer/commits/${currentBranch}`, {
+          headers: { "User-Agent": "SiGeKo-Planer-App" },
+          cache: "no-store",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.sha) {
+            remoteCommit = data.sha.slice(0, 7);
+            updatesAvailable = remoteCommit !== localCommit;
+          }
+        }
+      } catch (e) {
+        console.warn("Could not fetch remote commit info via GitHub API", e);
+      }
     }
 
     return NextResponse.json({
+      isDocker,
+      gitAvailable,
       currentBranch,
       localCommit,
       remoteCommit,
@@ -80,8 +126,32 @@ export async function POST(req: Request) {
     const cwd = process.cwd();
     const logs: string[] = [];
 
+    const isDocker = checkIsDocker();
+    const gitAvailable = await checkGitAvailable();
+
     logs.push(`=== System-Update gestartet [${new Date().toLocaleTimeString("de-DE")}] ===`);
     logs.push(`Ziel-Kanal: ${targetBranch}`);
+
+    // If running inside Docker or without git, provide actionable instructions
+    if (isDocker || !gitAvailable) {
+      logs.push("🐳 [Docker-Container-Umgebung erkannt]");
+      logs.push("⚠️ Hinweis: In-App Git-Updates sind innerhalb eines laufenden Docker-Containers deaktiviert.");
+      logs.push("Docker-Container sind unveränderliche (immutable) Umgebungen. In-Container-Updates würden nach einem Neustart verworfen und kompilieren die Next.js-App nicht neu.");
+      logs.push("");
+      logs.push("📋 So aktualisieren Sie Ihren Container direkt auf dem Host-System / Server:");
+      logs.push("1. Öffnen Sie das Terminal auf Ihrem Server im SiGeKo_Planer-Verzeichnis (z. B. cd /SiGeKo_Planer)");
+      logs.push(`2. Neuesten Quellcode herunterladen:   git pull origin ${targetBranch}`);
+      logs.push("3. Container neu bauen & starten:     docker compose up -d --build");
+      logs.push("");
+      logs.push("🛡️ Datensicherheit: Ihre SQLite-Datenbank und alle SiGeKo-Projekte liegen im Docker-Volume 'sigeko_planer_data' und bleiben beim Rebuild 100% erhalten!");
+
+      return NextResponse.json({
+        success: false,
+        isDocker: true,
+        currentBranch: targetBranch,
+        logs,
+      });
+    }
 
     // 1. Update Remote URL if provided
     if (repoUrl) {

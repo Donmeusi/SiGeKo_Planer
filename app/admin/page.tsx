@@ -20,6 +20,8 @@ import {
   UserCheck,
   UserX,
   HardHat,
+  Copy,
+  Check,
 } from "lucide-react";
 
 /* ─── Types ─────────────────────────────────────────────────── */
@@ -734,6 +736,8 @@ function SystemUpdatePanel() {
   const [localCommit, setLocalCommit] = useState("—");
   const [remoteCommit, setRemoteCommit] = useState("—");
   const [updatesAvailable, setUpdatesAvailable] = useState(false);
+  const [isDocker, setIsDocker] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
@@ -750,6 +754,7 @@ function SystemUpdatePanel() {
         setRemoteCommit(data.remoteCommit || "—");
         setRepoUrl(data.remoteUrl || "https://github.com/Donmeusi/SiGeKo_Planer.git");
         setUpdatesAvailable(Boolean(data.updatesAvailable));
+        setIsDocker(Boolean(data.isDocker));
       }
     } catch {}
     setLoading(false);
@@ -758,9 +763,11 @@ function SystemUpdatePanel() {
   useEffect(() => { fetchVersionInfo(); }, []);
 
   const handleDoUpdate = async () => {
-    if (!confirm(`Update / Kanal-Wechsel auf '${targetBranch}' jetzt durchführen?`)) return;
+    if (!confirm(isDocker 
+      ? `Anleitung zum Update auf den Kanal '${targetBranch}' im Protokoll anzeigen?`
+      : `Update / Kanal-Wechsel auf '${targetBranch}' jetzt durchführen?`)) return;
     setUpdating(true);
-    setLogs(["Update wird initialisiert…"]);
+    setLogs(["Update-Status wird abgerufen…"]);
     try {
       const res = await fetch("/api/system/update", {
         method: "POST",
@@ -784,6 +791,112 @@ function SystemUpdatePanel() {
 
   return (
     <div>
+      {/* Docker Notification Card if container is detected */}
+      {isDocker && (
+        <div
+          style={{
+            background: "var(--bg-surface)",
+            border: "1px solid rgba(59, 130, 246, 0.4)",
+            borderRadius: "12px",
+            padding: "20px",
+            marginBottom: "20px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.15)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "10px", flexWrap: "wrap" }}>
+            <span style={{ fontSize: "22px" }}>🐳</span>
+            <h2 style={{ ...sectionTitleStyle, margin: 0, display: "flex", alignItems: "center", gap: "8px" }}>
+              Docker-Container Umgebung aktiv
+            </h2>
+            <span
+              style={{
+                fontSize: "11px",
+                fontWeight: 700,
+                padding: "3px 10px",
+                borderRadius: "6px",
+                background: "rgba(59, 130, 246, 0.2)",
+                color: "#60a5fa",
+                border: "1px solid rgba(59, 130, 246, 0.3)",
+              }}
+            >
+              CONTAINER-MODUS
+            </span>
+          </div>
+
+          <p style={{ fontSize: "13px", color: "var(--text-secondary)", lineHeight: 1.6, marginBottom: "14px" }}>
+            Der SiGeKo-Planer läuft isoliert in einem Docker-Container. Aus Sicherheits- und Architekturgründen (Container-Immutabilität) werden Updates <strong>nicht per In-App Git-Pull im laufenden Container ausgeführt</strong>, sondern direkt auf Ihrem Host-System (Server) aktualisiert und neu gebaut.
+          </p>
+
+          <div style={{ marginBottom: "14px" }}>
+            <label style={{ ...labelStyle, marginBottom: "6px", display: "block" }}>
+              Terminal-Befehl für Ihren Server ({targetBranch.toUpperCase()}):
+            </label>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "10px",
+                background: "#080c14",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                borderRadius: "8px",
+                padding: "10px 14px",
+                flexWrap: "wrap",
+              }}
+            >
+              <code style={{ flex: 1, fontFamily: "monospace", fontSize: "13px", color: "#38bdf8", overflowX: "auto" }}>
+                git pull origin {targetBranch} &amp;&amp; docker compose up -d --build
+              </code>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(`git pull origin ${targetBranch} && docker compose up -d --build`);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2500);
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "7px 14px",
+                  borderRadius: "6px",
+                  background: copied ? "rgba(34, 197, 94, 0.2)" : "rgba(255, 255, 255, 0.1)",
+                  border: "1px solid",
+                  borderColor: copied ? "#22c55e" : "rgba(255, 255, 255, 0.2)",
+                  color: copied ? "#22c55e" : "var(--text-primary)",
+                  fontSize: "12px",
+                  fontWeight: 700,
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                  transition: "all 0.2s",
+                }}
+              >
+                {copied ? <Check size={14} /> : <Copy size={14} />}
+                {copied ? "Kopiert! ✓" : "Befehl kopieren"}
+              </button>
+            </div>
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              fontSize: "12px",
+              color: "#22c55e",
+              background: "rgba(34, 197, 94, 0.1)",
+              padding: "10px 14px",
+              borderRadius: "8px",
+              border: "1px solid rgba(34, 197, 94, 0.25)",
+            }}
+          >
+            <Shield size={16} style={{ flexShrink: 0 }} />
+            <span>
+              <strong>100% Datensicherheit:</strong> Ihre SQLite-Datenbank und alle SiGeKo-Projekte liegen im persistenten Docker-Volume <code>sigeko_planer_data</code> und bleiben beim Rebuild vollständig erhalten.
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Repository Section */}
       <div
         style={{
@@ -897,7 +1010,7 @@ function SystemUpdatePanel() {
             <option value="beta">Beta (beta) – neueste Features</option>
           </select>
           <p style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: "6px" }}>
-            Aktueller Kanal: <strong>{currentBranch}</strong>. Ein Kanalwechsel erfolgt automatisch beim nächsten Update.
+            Aktueller Kanal: <strong>{currentBranch}</strong>. {isDocker ? "Der Befehl oben passt sich automatisch an den gewählten Kanal an." : "Ein Kanalwechsel erfolgt automatisch beim nächsten Update."}
           </p>
         </div>
 
@@ -923,7 +1036,11 @@ function SystemUpdatePanel() {
           }}
         >
           <CloudDownload size={16} />
-          {updating ? "Update wird durchgeführt…" : "Update / Kanal-Wechsel durchführen"}
+          {updating 
+            ? "Verarbeite…" 
+            : isDocker 
+              ? "Update-Anleitung im Protokoll ausgeben" 
+              : "Update / Kanal-Wechsel durchführen"}
         </button>
       </div>
 
