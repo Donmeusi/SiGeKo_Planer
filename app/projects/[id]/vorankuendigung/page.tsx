@@ -20,6 +20,7 @@ import {
   ExternalLink,
   Edit3,
 } from "lucide-react";
+import { AuthoritySelector } from "./components/AuthoritySelector";
 
 interface AdvanceNoticeData {
   id?: string;
@@ -206,7 +207,7 @@ export default function AdvanceNoticePage() {
           </p>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "4px" }}>
+        <div>
           <button
             type="button"
             onClick={() => window.print()}
@@ -216,9 +217,6 @@ export default function AdvanceNoticePage() {
             <Printer size={16} />
             <span>Aushang drucken / PDF</span>
           </button>
-          <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-            Tipp: Im Druckdialog „Kopf- und Fußzeilen“ deaktivieren
-          </span>
         </div>
       </div>
 
@@ -347,6 +345,16 @@ export default function AdvanceNoticePage() {
             {/* TAB 1: Behörde & Schwellenwerte */}
             {activeTab === "authority" && (
               <div>
+                {/* 2-stufiges Behörden-Auswahlmenü pro Bundesland (§ 2 BaustellV) */}
+                <AuthoritySelector
+                  projectLocation={location}
+                  currentAuthorityName={authorityName}
+                  onSelectAuthority={(auth) => {
+                    setAuthorityName(auth.name);
+                    setAuthorityAddress(auth.address);
+                  }}
+                />
+
                 <div className="form-group">
                   <label className="form-label">Zuständige Behörde (Gewerbeaufsichtsamt / LAGetSi) *</label>
                   <input

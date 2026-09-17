@@ -13,20 +13,28 @@ Der **SiGeKo-Planer** ist eine spezialisierte Anwendung für Sicherheits- und Ge
 - Executive Dashboard mit Kennzahlen, aktiven Gewerken, offenen Mängeln und Sicherheitsstatus.
 - Gewerke- und Auftragnehmerverwaltung mit Nachunternehmerketten, Kontakten und Beschäftigtenzahlen.
 
-### 2. 📋 Vorankündigung nach § 2 BaustellV
+### 2. 📋 Vorankündigung nach § 2 BaustellV & Behörden-Finder
 - Automatische behördliche Prüflogik zur Ermittlung der gesetzlichen Vorankündigungspflicht:
   - Dauer der Arbeiten > 30 Arbeitstage und mehr als 20 Beschäftigte gleichzeitig
   - Gesamter Arbeitsumfang > 500 Personentage
   - Ausführung besonders gefährlicher Arbeiten nach Anhang II BaustellV
-- Erstellung, Verwaltung und behördenkonformer DIN A4 Druck zur Übermittlung an das Gewerbeaufsichtsamt / Amt für Arbeitsschutz.
+- **Integrierter Behörden-Finder für alle 16 Bundesländer:**
+  - 2-stufiges Auswahlmenü zur direkten Übernahme der zuständigen Gewerbeaufsichtsämter, Regierungspräsidien und Landesämter für Arbeitsschutz.
+  - Automatische Bauort-Erkennung via Postleitzahl oder Städtenamen des Bauvorhabens.
+  - Postanschriften, Telefon, E-Mail und direkte Links zu den offiziellen Landes-Meldungsportalen (Service-BW, BayernPortal, WSP.NRW, Amt24 Sachsen etc.).
+- Erstellung, Verwaltung und behördenkonformer DIN A4 Druck zur Übermittlung an die Behörde und als Baustellenaushang.
 
 ### 3. 🛡️ Sicherheits- und Gesundheitsschutzplan (SiGe-Plan) nach RAB 31
 - Strukturierung nach Bauphasen und Gewerken.
 - Erfassung räumlicher und zeitlicher Überschneidungen und gegenseitiger Gefährdungen.
 - Zuweisung koordinierter, gemeinsamer Schutzmaßnahmen und Verantwortlichkeiten.
 - Kennzeichnung von Arbeiten mit besonderen Gefahren nach **Anhang II BaustellV**.
+- **4 umschaltbare Ansichtsmodi:**
+  - *Praxis-Matrix (Kompakt)*: Praxisbewährte tabellarische Übersicht für schnelle Baustellenbesprechungen.
+  - *Phasen-Akkordeon (Karten)*: Strukturierte Detailkarten je Bauabschnitt mit Aufklappfunktion.
+  - *Druckansicht (DIN A4 Landscape)*: Perfekt proportionierte Querformat-Druckausgabe für Bauherren und Behörden.
+  - *Anhang II Express-Filter*: Gezielte Filterung auf Arbeiten mit besonderen Gefährdungen.
 - Filterbar nach Phase, Priorität, Gewerk und Anhang II.
-- Exportierbar im Querformat (DIN A4 Landscape).
 
 ### 4. 🔍 Baubegehungen & Mängelmanagement
 - Dokumentation von Baustellenbegehungen (Datum, SiGeKo, Teilnehmer, Wetter, Baufortschritt, Gesamteindruck).
@@ -75,7 +83,7 @@ Der **SiGeKo-Planer** ist eine spezialisierte Anwendung für Sicherheits- und Ge
 - **Typisierung:** [TypeScript 5](https://www.typescriptlang.org/)
 - **Datenbank & ORM:** [SQLite](https://www.sqlite.org/) via [Prisma ORM 6](https://www.prisma.io/)
 - **Icons:** [Lucide React](https://lucide.dev/)
-- **Styling:** Modular gestaltetes, hochmodernes Vanilla CSS Design System (SiGe-Safety-Engineering Theme mit Glassmorphism, Dark-Mode-Kontrasten und Print-Stylesheets)
+- **Styling:** Ergonomisches Vanilla CSS Design System mit 5 Farbwelten (Architektur Dunkel, Architektur Hell, Baustellen Slate, Nordic Blue, Warmes Holz), Theme-Switcher mit `localStorage`-Persistierung und maßgeschneiderten Print-Stylesheets für DIN A4 Portrait & Landscape.
 
 ---
 

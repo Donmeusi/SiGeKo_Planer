@@ -3,6 +3,7 @@
 import { Plus, AlertTriangle, MapPin, Building, Menu } from "lucide-react";
 import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
 interface TopBarProps {
   projectName?: string;
@@ -130,6 +131,8 @@ export default function TopBar({
 
       {/* Action Buttons */}
       <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
+        <ThemeSwitcher variant="topbar" showLabel={true} />
+
         {isCockpit && (
           <button
             onClick={() => setShowNewProjectModal(true)}

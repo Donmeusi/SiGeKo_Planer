@@ -6,7 +6,36 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/) 
 
 ---
 
-## [0.3.0] - 2026-09-10
+## [0.4.0] - 2026-09-17
+
+### Hinzugefügt
+- **Behördendatenbank für alle 16 Bundesländer (§ 2 BaustellV):**
+  - Vollständige bundesweite Datenbank aller zuständigen Arbeitsschutz- und Gewerbeaufsichtsbehörden, Regierungspräsidien, Bezirksregierungen und Landesämter für Arbeitsschutz (`lib/german-authorities.ts`).
+  - Genaue Anschriften, Telefon, E-Mail, regionale Zuständigkeiten und Direktlinks zu den offiziellen Online-Meldungsportalen (Service-BW, BayernPortal, WSP.NRW, Amt24 Sachsen etc.).
+- **Interaktiver Behörden-Finder & Auswahlmenü in der Vorankündigung:**
+  - Neues 2-stufiges Auswahlmenü (`AuthoritySelector.tsx`): Bundesland ➔ Regionale Dienststelle / Aufsichtsamt.
+  - Automatische Standort-Erkennung anhand von PLZ oder Städtenamen des Bauvorhabens mit 1-Klick-Aktivierungschip.
+  - 1-Klick-Übernahme von Behördenname und Anschrift direkt in das Vorankündigungsformular und den druckfertigen Baustellenaushang.
+- **Sicherheits- und Gesundheitsschutzplan (SiGe-Plan) nach RAB 31 – Multiansichten:**
+  - 4 umschaltbare Ansichtsmodi: *Praxis-Matrix (Kompakt)*, *Phasen-Akkordeon (Karten)*, *Druckansicht (Querformat / DIN A4 Landscape)* und *Anhang II Express-Filter*.
+  - Schnelle Filterung nach Bauphase, Gewerk, Priorität und Anhang II (besondere Gefahren).
+- **Multi-Theme-System (5 Farbwelten & Hell/Dunkel):**
+  - Schneller Farbschema-Umschalter oben rechts in der Kopfzeile (`TopBar.tsx`) mit Live-Vorschau und `localStorage`-Persistierung.
+  - 5 ergonomische Themes: *Architektur Dunkel*, *Architektur Hell*, *Baustellen Slate* (Smaragdgrün & Zink), *Nordic Blue* (Ozeanblau & Schiefer) und *Warmes Holz / Sepia*.
+
+### Geändert & Optimiert
+- **Workflow-Optimierung der Hauptnavigation (`Sidebar.tsx`):**
+  - Reorganisation der Menüpunkte nach dem realen, chronologischen Arbeitsablauf des SiGeKos:
+    1. *Projekt & Basis* (Cockpit, Gewerke & Firmen)
+    2. *Planung vor Baubeginn* (Vorankündigung, SiGe-Plan, Baustellenordnung)
+    3. *Ausführung auf der Baustelle* (Begehungen & Mängel)
+    4. *Abschluss & spätere Arbeiten* (Unterlage nach RAB 32)
+    5. *Bibliothek & System* (Gefährdungskatalog, Admin)
+  - Theme-Auswahl aus dem Seitenmenü entfernt und ergonomisch in die TopBar verlagert.
+- **Bereinigung Vorankündigung:**
+  - Entfernung des Hinweises zu Browser-Kopf- und Fußzeilen im Kopfbereich für ein aufgeräumtes Erscheinungsbild.
+
+---
 
 ### Hinzugefügt
 - **Baustellenordnung nach 7-Kapitel-Themenkatalog:**

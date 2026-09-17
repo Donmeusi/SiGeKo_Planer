@@ -47,7 +47,7 @@ async function verifyTokenEdge(token: string): Promise<boolean> {
     const enc = new TextEncoder();
 
     const sigBytes = base64urlToBytes(sigPart);
-    const isValid = await crypto.subtle.verify("HMAC", key, sigBytes, enc.encode(dataPart));
+    const isValid = await crypto.subtle.verify("HMAC", key, sigBytes as any, enc.encode(dataPart));
     if (!isValid) return false;
 
     // Decode payload (dataPart is base64url JSON)

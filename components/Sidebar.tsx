@@ -92,63 +92,97 @@ export default function Sidebar({
 
   const currentProject = projectList.find((p) => p.id === currentProjectId) || projectList[0];
 
-  const navItems = [
+  interface NavSection {
+    title: string;
+    items: {
+      label: string;
+      href: string;
+      icon: any;
+      badge: string | null;
+    }[];
+  }
+
+  const navSections: NavSection[] = [
     {
-      label: "Baustellen-Cockpit",
-      href: currentProjectId ? `/projects/${currentProjectId}` : "/",
-      icon: LayoutDashboard,
-      badge: null,
+      title: "1. Projekt & Basis",
+      items: [
+        {
+          label: "Baustellen-Cockpit",
+          href: currentProjectId ? `/projects/${currentProjectId}` : "/",
+          icon: LayoutDashboard,
+          badge: null,
+        },
+        {
+          label: "Gewerke & Firmen",
+          href: currentProjectId ? `/projects/${currentProjectId}/gewerke` : "/gewerke",
+          icon: Users,
+          badge: "Firmen",
+        },
+      ],
     },
     {
-      label: "Vorankündigung",
-      href: currentProjectId ? `/projects/${currentProjectId}/vorankuendigung` : "/vorankuendigung",
-      icon: FileText,
-      badge: "§ 2",
+      title: "2. Planung (Vor Baubeginn)",
+      items: [
+        {
+          label: "Vorankündigung",
+          href: currentProjectId ? `/projects/${currentProjectId}/vorankuendigung` : "/vorankuendigung",
+          icon: FileText,
+          badge: "§ 2",
+        },
+        {
+          label: "SiGe-Plan (RAB 31)",
+          href: currentProjectId ? `/projects/${currentProjectId}/sige-plan` : "/sige-plan",
+          icon: ShieldAlert,
+          badge: "Kern",
+        },
+        {
+          label: "Baustellenordnung",
+          href: currentProjectId ? `/projects/${currentProjectId}/baustellenordnung` : "/baustellenordnung",
+          icon: ScrollText,
+          badge: "Regeln",
+        },
+      ],
     },
     {
-      label: "SiGe-Plan (RAB 31)",
-      href: currentProjectId ? `/projects/${currentProjectId}/sige-plan` : "/sige-plan",
-      icon: ShieldAlert,
-      badge: "Kern",
+      title: "3. Ausführung (Baustelle)",
+      items: [
+        {
+          label: "Begehung & Mängel",
+          href: currentProjectId ? `/projects/${currentProjectId}/begehungen` : "/begehungen",
+          icon: ClipboardCheck,
+          badge: "Audit",
+        },
+      ],
     },
     {
-      label: "Gefährdungskatalog",
-      href: currentProjectId ? `/projects/${currentProjectId}/katalog` : "/katalog",
-      icon: BookOpen,
-      badge: "ASR",
+      title: "4. Abschluss (Spätere Arbeiten)",
+      items: [
+        {
+          label: "Unterlage (RAB 32)",
+          href: currentProjectId ? `/projects/${currentProjectId}/unterlage` : "/unterlage",
+          icon: Building2,
+          badge: "§ 3",
+        },
+      ],
     },
     {
-      label: "Begehung & Mängel",
-      href: currentProjectId ? `/projects/${currentProjectId}/begehungen` : "/begehungen",
-      icon: ClipboardCheck,
-      badge: null,
-    },
-    {
-      label: "Baustellenordnung",
-      href: currentProjectId ? `/projects/${currentProjectId}/baustellenordnung` : "/baustellenordnung",
-      icon: ScrollText,
-      badge: null,
-    },
-    {
-      label: "Unterlage (RAB 32)",
-      href: currentProjectId ? `/projects/${currentProjectId}/unterlage` : "/unterlage",
-      icon: Building2,
-      badge: null,
-    },
-    {
-      label: "Gewerke & Firmen",
-      href: currentProjectId ? `/projects/${currentProjectId}/gewerke` : "/gewerke",
-      icon: Users,
-      badge: null,
+      title: "Bibliothek & System",
+      items: [
+        {
+          label: "Gefährdungskatalog",
+          href: currentProjectId ? `/projects/${currentProjectId}/katalog` : "/katalog",
+          icon: BookOpen,
+          badge: "ASR",
+        },
+        {
+          label: "Admin & System",
+          href: "/admin",
+          icon: Settings,
+          badge: "Admin",
+        },
+      ],
     },
   ];
-
-  const adminNavItem = {
-    label: "Admin & System",
-    href: "/admin",
-    icon: Settings,
-    badge: "Admin",
-  };
 
   return (
     <aside
@@ -468,91 +502,76 @@ export default function Sidebar({
         </div>
       )}
 
-      {/* Navigation Items */}
-      <nav style={{ flex: 1, padding: "8px 0", display: "flex", flexDirection: "column", gap: "1px" }}>
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href));
+      {/* Navigation Items grouped by SiGeKo Workflow Phases */}
+      <nav style={{ flex: 1, padding: "6px 0", display: "flex", flexDirection: "column", gap: "2px" }}>
+        {navSections.map((section, sIdx) => (
+          <div key={section.title} style={{ marginBottom: isCollapsed ? "3px" : "6px" }}>
+            {/* Phasen-Überschrift */}
+            {!isCollapsed ? (
+              <div
+                style={{
+                  padding: "6px 14px 2px",
+                  fontSize: "9.5px",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                  color: "var(--text-muted)",
+                }}
+              >
+                {section.title}
+              </div>
+            ) : sIdx > 0 ? (
+              <div style={{ margin: "4px 8px", borderTop: "1px solid var(--border)" }} />
+            ) : null}
 
-          return (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => onClose?.()}
-              className={`nav-item ${isActive ? "active" : ""}`}
-              id={`nav-${item.label.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
-              title={item.label + (item.badge ? ` (${item.badge})` : "")}
-            >
-              <Icon size={16} style={{ flexShrink: 0 }} />
-              {!isCollapsed && (
-                <>
-                  <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {item.label}
-                  </span>
-                  {item.badge && (
-                    <span
-                      style={{
-                        fontSize: "9.5px",
-                        padding: "1px 5px",
-                        borderRadius: "4px",
-                        background: isActive ? "rgba(245, 158, 11, 0.25)" : "rgba(255,255,255,0.08)",
-                        color: isActive ? "var(--safety-amber)" : "var(--text-muted)",
-                        fontWeight: 600,
-                        lineHeight: "1.3",
-                      }}
-                    >
-                      {item.badge}
-                    </span>
-                  )}
-                </>
-              )}
-            </Link>
-          );
-        })}
+            {/* Phasen-Items */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "1px" }}>
+              {section.items.map((item) => {
+                const Icon = item.icon;
+                const isActive =
+                  pathname === item.href ||
+                  (item.href !== "/" && pathname?.startsWith(item.href));
 
-        {/* Admin separator */}
-        <div style={{ margin: "6px 8px", borderTop: "1px solid var(--border)" }} />
-
-        {/* Admin & System nav item */}
-        {(() => {
-          const Icon = adminNavItem.icon;
-          const isActive = pathname === adminNavItem.href || pathname?.startsWith(adminNavItem.href + "/");
-          return (
-            <Link
-              href={adminNavItem.href}
-              onClick={() => onClose?.()}
-              className={`nav-item ${isActive ? "active" : ""}`}
-              id="nav-admin-system"
-              title="Admin & System"
-              style={{
-                color: isActive ? "var(--safety-amber)" : "var(--text-muted)",
-                borderTop: "none",
-              }}
-            >
-              <Icon size={16} style={{ flexShrink: 0 }} />
-              {!isCollapsed && (
-                <>
-                  <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
-                    {adminNavItem.label}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: "9.5px",
-                      padding: "1px 5px",
-                      borderRadius: "4px",
-                      background: isActive ? "rgba(245, 158, 11, 0.25)" : "rgba(245,158,11,0.1)",
-                      color: isActive ? "var(--safety-amber)" : "rgba(245,158,11,0.7)",
-                      fontWeight: 600,
-                      lineHeight: "1.3",
-                    }}
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    onClick={() => onClose?.()}
+                    className={`nav-item ${isActive ? "active" : ""}`}
+                    id={`nav-${item.label.toLowerCase().replace(/[^a-z0-9]/g, "-")}`}
+                    title={item.label + (item.badge ? ` (${item.badge})` : "")}
                   >
-                    {adminNavItem.badge}
-                  </span>
-                </>
-              )}
-            </Link>
-          );
-        })()}
+                    <Icon size={15} style={{ flexShrink: 0 }} />
+                    {!isCollapsed && (
+                      <>
+                        <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {item.label}
+                        </span>
+                        {item.badge && (
+                          <span
+                            style={{
+                              fontSize: "9px",
+                              padding: "1px 5px",
+                              borderRadius: "4px",
+                              background: isActive
+                                ? "rgba(245, 158, 11, 0.25)"
+                                : "rgba(255,255,255,0.06)",
+                              color: isActive ? "var(--safety-amber)" : "var(--text-muted)",
+                              fontWeight: 600,
+                              lineHeight: "1.3",
+                            }}
+                          >
+                            {item.badge}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </nav>
 
       {/* Bottom Info & RAB 30 Badge + Collapse Footer */}

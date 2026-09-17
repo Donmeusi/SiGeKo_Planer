@@ -23,6 +23,10 @@ export async function POST(
         regulations: body.regulations,
         priority: body.priority || "NORMAL",
         orderIndex: Number(body.orderIndex) || 0,
+        startDate: body.startDate ? new Date(body.startDate) : null,
+        endDate: body.endDate ? new Date(body.endDate) : null,
+        color: body.color || null,
+        progress: body.progress !== undefined ? Number(body.progress) : 0,
       },
     });
 
@@ -45,20 +49,26 @@ export async function PUT(
       return NextResponse.json({ error: "entryId erforderlich" }, { status: 400 });
     }
 
+    const updateData: any = {};
+    if (data.phase !== undefined) updateData.phase = data.phase;
+    if (data.trade !== undefined) updateData.trade = data.trade;
+    if (data.activity !== undefined) updateData.activity = data.activity;
+    if (data.hazards !== undefined) updateData.hazards = data.hazards;
+    if (data.isAnnex2SpecialHazard !== undefined) updateData.isAnnex2SpecialHazard = Boolean(data.isAnnex2SpecialHazard);
+    if (data.spatialTemporalOverlap !== undefined) updateData.spatialTemporalOverlap = data.spatialTemporalOverlap;
+    if (data.commonMeasures !== undefined) updateData.commonMeasures = data.commonMeasures;
+    if (data.responsibleCompany !== undefined) updateData.responsibleCompany = data.responsibleCompany;
+    if (data.regulations !== undefined) updateData.regulations = data.regulations;
+    if (data.priority !== undefined) updateData.priority = data.priority;
+    if (data.orderIndex !== undefined) updateData.orderIndex = Number(data.orderIndex);
+    if (data.startDate !== undefined) updateData.startDate = data.startDate ? new Date(data.startDate) : null;
+    if (data.endDate !== undefined) updateData.endDate = data.endDate ? new Date(data.endDate) : null;
+    if (data.color !== undefined) updateData.color = data.color;
+    if (data.progress !== undefined) updateData.progress = Number(data.progress);
+
     const updated = await db.siGePlanEntry.update({
       where: { id: entryId },
-      data: {
-        phase: data.phase,
-        trade: data.trade,
-        activity: data.activity,
-        hazards: data.hazards,
-        isAnnex2SpecialHazard: Boolean(data.isAnnex2SpecialHazard),
-        spatialTemporalOverlap: data.spatialTemporalOverlap,
-        commonMeasures: data.commonMeasures,
-        responsibleCompany: data.responsibleCompany,
-        regulations: data.regulations,
-        priority: data.priority,
-      },
+      data: updateData,
     });
 
     return NextResponse.json(updated);
@@ -66,6 +76,13 @@ export async function PUT(
     console.error("PUT /api/projects/[id]/sige-plan error:", error);
     return NextResponse.json({ error: "Fehler beim Aktualisieren" }, { status: 500 });
   }
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  return PUT(req, { params });
 }
 
 export async function DELETE(req: Request) {
