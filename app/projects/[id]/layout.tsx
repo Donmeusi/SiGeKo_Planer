@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { db } from "@/lib/db";
+import { db, ensureDatabaseSchema } from "@/lib/db";
 import AppShell from "@/components/AppShell";
 
 export default async function ProjectLayout({
@@ -9,6 +9,7 @@ export default async function ProjectLayout({
   children: React.ReactNode;
   params: Promise<{ id: string }>;
 }) {
+  await ensureDatabaseSchema();
   const { id } = await params;
 
   const project = await db.project.findUnique({

@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
-import { db } from "@/lib/db";
+import { db, ensureDatabaseSchema } from "@/lib/db";
 import Link from "next/link";
 import { HardHat, Building, ArrowRight, ShieldCheck, FileText, Users } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
+  await ensureDatabaseSchema();
+
   const projects = await db.project.findMany({
     orderBy: { updatedAt: "desc" },
     include: {

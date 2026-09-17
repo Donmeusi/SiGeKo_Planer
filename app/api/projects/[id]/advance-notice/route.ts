@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
+import { db, ensureDatabaseSchema } from "@/lib/db";
 
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await ensureDatabaseSchema();
     const { id } = await params;
     const body = await req.json();
 

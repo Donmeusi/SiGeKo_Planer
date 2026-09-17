@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { db } from "@/lib/db";
+import { db, ensureDatabaseSchema } from "@/lib/db";
 import Link from "next/link";
 import {
   AlertTriangle,
@@ -26,6 +26,7 @@ export default async function ProjectDashboardPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await ensureDatabaseSchema();
   const { id } = await params;
 
   const project = await db.project.findUnique({
