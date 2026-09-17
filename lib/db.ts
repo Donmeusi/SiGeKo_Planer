@@ -46,6 +46,31 @@ export async function ensureDatabaseSchema(): Promise<void> {
         console.log("🛠️ [DB-Migration] Ergänze Spalte 'personDaysDetails' in AdvanceNotice...");
         await db.$executeRawUnsafe(`ALTER TABLE "AdvanceNotice" ADD COLUMN "personDaysDetails" TEXT`);
       }
+
+      // 4. Prüfen ob HazardCatalogItem Tabelle existiert und leer ist
+      const catalogTables: any[] = await db.$queryRawUnsafe(
+        `SELECT name FROM sqlite_master WHERE type='table' AND name='HazardCatalogItem'`
+      );
+      if (catalogTables && catalogTables.length > 0) {
+        const catalogCount = await db.hazardCatalogItem.count();
+        if (catalogCount === 0) {
+          console.log("📦 [DB-Migration] Initialisiere Standard-Gefährdungskatalog (20+ Vorlagen)...");
+          const { INITIAL_HAZARDS_CATALOG } = await import("./sample-catalog");
+          for (const item of INITIAL_HAZARDS_CATALOG) {
+            await db.hazardCatalogItem.create({
+              data: {
+                tradeCategory: item.tradeCategory,
+                activity: item.activity,
+                hazard: item.hazard,
+                protectiveMeasure: item.protectiveMeasure,
+                isAnnex2: item.isAnnex2,
+                regulations: item.regulations,
+              },
+            });
+          }
+          console.log("✓ [DB-Migration] Standard-Gefährdungskatalog erfolgreich initialisiert.");
+        }
+      }
     } catch (err) {
       console.warn("⚠️ [DB-Migration] Hinweis zur Schema-Prüfung:", err);
     }
