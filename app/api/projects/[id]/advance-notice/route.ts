@@ -34,6 +34,8 @@ export async function PUT(
         submittedDate: body.submittedDate ? new Date(body.submittedDate) : null,
         status: body.status || "ENTWURF",
         notes: body.notes,
+        annex2Activities: body.annex2Activities !== undefined ? body.annex2Activities : null,
+        personDaysDetails: body.personDaysDetails !== undefined ? body.personDaysDetails : null,
       },
       update: {
         authorityName: body.authorityName,
@@ -46,6 +48,8 @@ export async function PUT(
         submittedDate: body.submittedDate ? new Date(body.submittedDate) : null,
         status: body.status,
         notes: body.notes,
+        annex2Activities: body.annex2Activities !== undefined ? body.annex2Activities : undefined,
+        personDaysDetails: body.personDaysDetails !== undefined ? body.personDaysDetails : undefined,
       },
     });
 

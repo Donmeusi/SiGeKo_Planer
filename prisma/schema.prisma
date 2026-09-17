@@ -67,6 +67,8 @@ model AdvanceNotice {
   submittedDate          DateTime?
   status                 String    @default("ENTWURF")
   notes                  String?
+  annex2Activities       String?
+  personDaysDetails      String?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
 }

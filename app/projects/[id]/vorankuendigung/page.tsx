@@ -21,6 +21,9 @@ import {
   Edit3,
 } from "lucide-react";
 import { AuthoritySelector } from "./components/AuthoritySelector";
+import { PersonDaysCalculator } from "./components/PersonDaysCalculator";
+import { Annex2Selector } from "./components/Annex2Selector";
+import { ANNEX_2_REGULATIONS, parseAnnex2Selection } from "@/lib/annex2-regulations";
 
 interface AdvanceNoticeData {
   id?: string;
@@ -35,6 +38,8 @@ interface AdvanceNoticeData {
   submittedDate: string | null;
   status: string;
   notes: string | null;
+  annex2Activities?: string | null;
+  personDaysDetails?: string | null;
 }
 
 interface ProjectData {
@@ -68,6 +73,8 @@ export default function AdvanceNoticePage() {
   const [maxWorkers, setMaxWorkers] = useState(1);
   const [totalWorkDays, setTotalWorkDays] = useState(0);
   const [hasSpecialRisks, setHasSpecialRisks] = useState(false);
+  const [annex2Activities, setAnnex2Activities] = useState<string[]>([]);
+  const [personDaysDetails, setPersonDaysDetails] = useState<string | null>(null);
   const [status, setStatus] = useState("ENTWURF");
   const [submittedDate, setSubmittedDate] = useState("");
   const [notes, setNotes] = useState("");
@@ -118,6 +125,8 @@ export default function AdvanceNoticePage() {
             setMaxWorkers(data.advanceNotice.maxWorkersSimultaneous || 1);
             setTotalWorkDays(data.advanceNotice.estimatedTotalWorkDays || 0);
             setHasSpecialRisks(Boolean(data.advanceNotice.hasSpecialRisks));
+            setAnnex2Activities(parseAnnex2Selection(data.advanceNotice.annex2Activities));
+            setPersonDaysDetails(data.advanceNotice.personDaysDetails || null);
             setStatus(data.advanceNotice.status || "ENTWURF");
             setSubmittedDate(
               data.advanceNotice.submittedDate
@@ -138,7 +147,7 @@ export default function AdvanceNoticePage() {
   // Automatische Kriterienprüfung gem. § 2 BaustellV
   const isCriteria1 = maxWorkers > 20; // Mehr als 20 gleichzeitig
   const isCriteria2 = totalWorkDays > 500; // Mehr als 500 Personentage
-  const isCriteria3 = hasSpecialRisks; // Arbeiten mit besonderen Gefahren (Anhang II)
+  const isCriteria3 = hasSpecialRisks || annex2Activities.length > 0; // Arbeiten mit besonderen Gefahren (Anhang II)
   const isNoticeRequired = isCriteria1 || isCriteria2 || isCriteria3;
 
   const handleSave = async (e: React.FormEvent) => {
@@ -156,7 +165,9 @@ export default function AdvanceNoticePage() {
           authorityAddress,
           maxWorkersSimultaneous: maxWorkers,
           estimatedTotalWorkDays: totalWorkDays,
-          hasSpecialRisks,
+          hasSpecialRisks: Boolean(hasSpecialRisks || annex2Activities.length > 0),
+          annex2Activities: JSON.stringify(annex2Activities),
+          personDaysDetails,
           status,
           submittedDate: submittedDate || null,
           notes,
@@ -298,7 +309,11 @@ export default function AdvanceNoticePage() {
             <div style={{ fontSize: "10.5px", color: "var(--text-muted)", fontWeight: 600 }}>KRITERIUM 3</div>
             <div style={{ fontWeight: 600, fontSize: "12.5px" }}>Arbeiten nach Anhang II</div>
             <div style={{ fontSize: "11.5px", color: isCriteria3 ? "var(--hazard-red)" : "var(--text-secondary)" }}>
-              {isCriteria3 ? "Besondere Gefahren vorhanden" : "Keine Anhang II Arbeiten"}
+              {annex2Activities.length > 0
+                ? `${annex2Activities.length} Anhang II Tätigkeiten gewählt`
+                : isCriteria3
+                ? "Besondere Gefahren vorhanden"
+                : "Keine Anhang II Arbeiten"}
             </div>
           </div>
         </div>
@@ -391,7 +406,7 @@ export default function AdvanceNoticePage() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Personentage gesamt *</label>
+                    <label className="form-label">Personentage gesamt (Umfang) *</label>
                     <input
                       type="number"
                       min="0"
@@ -400,22 +415,41 @@ export default function AdvanceNoticePage() {
                       value={totalWorkDays}
                       onChange={(e) => setTotalWorkDays(parseInt(e.target.value) || 0)}
                     />
+                    <div style={{ fontSize: "11px", color: totalWorkDays > 500 ? "var(--safety-amber)" : "var(--text-muted)", marginTop: "4px" }}>
+                      {totalWorkDays > 500
+                        ? "🚨 > 500 Personentage: Kriterium 2 erfüllt (Vorankündigungspflichtig)"
+                        : "≤ 500 Personentage (Schwellenwert nicht erreicht)"}
+                    </div>
                   </div>
                 </div>
 
-                <div className="form-group" style={{ margin: "14px 0" }}>
-                  <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
-                    <input
-                      type="checkbox"
-                      style={{ width: "16px", height: "16px", accentColor: "var(--hazard-red)" }}
-                      checked={hasSpecialRisks}
-                      onChange={(e) => setHasSpecialRisks(e.target.checked)}
-                    />
-                    <span style={{ fontSize: "12.5px", fontWeight: 500, color: "var(--text-primary)" }}>
-                      Auf der Baustelle fallen Arbeiten mit besonderen Gefahren (Anhang II BaustellV) an
-                    </span>
-                  </label>
-                </div>
+                {/* 1. Berechnungsmodul für die Personentage (Kriterium 2) */}
+                <PersonDaysCalculator
+                  initialTotalDays={totalWorkDays}
+                  initialMaxWorkers={maxWorkers}
+                  plannedStart={plannedStart}
+                  plannedEnd={plannedEnd}
+                  contractors={project?.contractors}
+                  onApplyResults={(calculatedDays, calculatedMaxWorkers, detailsJson) => {
+                    setTotalWorkDays(calculatedDays);
+                    if (calculatedMaxWorkers && calculatedMaxWorkers > 1) {
+                      setMaxWorkers(calculatedMaxWorkers);
+                    }
+                    if (detailsJson) {
+                      setPersonDaysDetails(detailsJson);
+                    }
+                  }}
+                />
+
+                {/* 2. Auswahlmenü für gefährliche Tätigkeiten nach Anhang II BaustellV (Kriterium 3) */}
+                <Annex2Selector
+                  initialSelection={annex2Activities}
+                  hasSpecialRisks={hasSpecialRisks}
+                  onSelectionChange={(selected, hasRisks) => {
+                    setAnnex2Activities(selected);
+                    setHasSpecialRisks(hasRisks);
+                  }}
+                />
 
                 <div className="form-grid-2">
                   <div className="form-group">
@@ -713,6 +747,38 @@ export default function AdvanceNoticePage() {
                   {project?.contractors && project.contractors.length > 0
                     ? project.contractors.map((c) => c.companyName).join(", ")
                     : "Noch nicht vollständig benannt"}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ padding: "6px 0", fontWeight: 700, color: "#334155", verticalAlign: "top" }}>Gesamtumfang der Arbeiten:</td>
+                <td style={{ padding: "6px 0", color: "#0f172a" }}>
+                  <strong>{totalWorkDays.toLocaleString("de-DE")} Personentage (PT)</strong>
+                  {totalWorkDays > 500 && (
+                    <span style={{ fontSize: "11px", color: "#b45309", marginLeft: "6px" }}>
+                      (&gt; 500 PT Schwellenwert nach § 2 Abs. 1 BaustellV überschritten)
+                    </span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td style={{ padding: "6px 0", fontWeight: 700, color: "#334155", verticalAlign: "top" }}>12. Arbeiten mit bes. Gefahren (Anhang II):</td>
+                <td style={{ padding: "6px 0", color: "#0f172a" }}>
+                  {annex2Activities.length > 0 ? (
+                    <ul style={{ margin: "0", paddingLeft: "16px" }}>
+                      {annex2Activities.map((actId) => {
+                        const item = ANNEX_2_REGULATIONS.find((r) => r.id === actId);
+                        return item ? (
+                          <li key={actId} style={{ marginBottom: "3px" }}>
+                            <strong>Nr. {item.number}:</strong> {item.shortLabel}
+                          </li>
+                        ) : null;
+                      })}
+                    </ul>
+                  ) : hasSpecialRisks ? (
+                    <span>Arbeiten mit besonderen Gefahren gem. Anhang II BaustellV fallen an</span>
+                  ) : (
+                    <span style={{ color: "#64748b" }}>Keine Arbeiten nach Anhang II BaustellV gemeldet</span>
+                  )}
                 </td>
               </tr>
             </tbody>

@@ -110,6 +110,8 @@ async function main() {
         submittedDate: new Date("2026-03-18"),
         status: "AUSGEHAENGT",
         notes: "Vorankündigung formgerecht übermittelt und wetterfest am Hauptzugangstor der Baustelle ausgehängt.",
+        annex2Activities: JSON.stringify(["annex2-1", "annex2-2", "annex2-10"]),
+        personDaysDetails: JSON.stringify({ mode: "trades", totalPersonDays: 14500 }),
       },
     });
 

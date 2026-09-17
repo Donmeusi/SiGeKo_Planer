@@ -6,6 +6,19 @@ Das Format basiert auf [Keep a Changelog](https://keepachangelog.com/de/1.0.0/) 
 
 ---
 
+## [0.5.0] - 2026-09-17
+
+### Hinzugefügt
+- **Personentage-Berechnungsmodul (Kriterium 2 gem. § 2 BaustellV & RAB 10):**
+  - Integrierter Vorankündigungs-Rechner zur rechtssicheren Ermittlung der Personentage (`PersonDaysCalculator.tsx`).
+  - **Modus 1 (Schnellberechnung):** Automatische Ermittlung der Netto-Arbeitstage aus Beginn- und Enddatum (5- oder 6-Tage-Woche) multipliziert mit der durchschnittlichen Beschäftigtenzahl.
+  - **Modus 2 (Detaillierte Phasen- & Gewerkeaufstellung):** Beliebig viele Bauabschnitte mit Tagen und Arbeitern erfassen inklusive 1-Klick-Import aller Firmen aus den Projektstammdaten.
+  - Live-Schwellenwertprüfung (> 500 PT) mit optischer Ampelanzeige und 1-Klick-Übernahme in die Vorankündigung.
+- **Auswahlmenü für besonders gefährliche Arbeiten nach Anhang II BaustellV (Kriterium 3):**
+  - Vollständiger 10-Punkte-Katalog der Baustellenverordnung (`Annex2Selector.tsx` und `lib/annex2-regulations.ts`) mit amtlichem Gesetzestext, anschaulichen Praxisbeispielen und betroffenen Gewerken.
+  - Volltext-Suchfilter und Schnellwahl für typische Hochbau-Gefahren (Nr. 1 Absturz > 5 m / Gräben, Nr. 2 Gefahrstoffe / KMR / Asbest, Nr. 10 Fertigteilmontage).
+  - Automatische rechtliche Auswertung von Kriterium 3 (§ 2 Abs. 1 & 3 BaustellV) und Übernahme der ausgewählten Ziffern in das Formular und den amtlichen Baustellenaushang (Druckansicht).
+
 ## [0.4.0] - 2026-09-17
 
 ### Hinzugefügt
